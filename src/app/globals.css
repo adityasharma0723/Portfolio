@@ -1,0 +1,337 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   Design tokens — light theme (default)
+───────────────────────────────────────────── */
+:root {
+  --bg: #EEF1F5;
+  --ink: #15213B;
+  --muted: #4F5A74;
+  --line: #C9D0DD;
+  --card: #F8F9FB;
+  --accent: #E8A317;
+  --accent-muted: rgba(232, 163, 23, 0.16);
+  --blue: #4A7FE8;
+  --blue-muted: rgba(74, 127, 232, 0.16);
+  --radius-card: 16px;
+  --radius-btn: 10px;
+  --radius-pill: 9999px;
+}
+
+/* ─────────────────────────────────────────────
+   Dark theme tokens
+───────────────────────────────────────────── */
+.dark, [data-theme="dark"] {
+  --bg: #080D18;
+  --ink: #EAF0FA;
+  --muted: #94A3BF;
+  --line: #1E2A42;
+  --card: #0F1829;
+  --accent: #F5B83D;
+  --accent-muted: rgba(245, 184, 61, 0.18);
+  --blue: #6C9BFF;
+  --blue-muted: rgba(108, 155, 255, 0.18);
+}
+
+/* ─────────────────────────────────────────────
+   Tailwind v4 theme registration
+───────────────────────────────────────────── */
+@theme {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-card: var(--card);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-blue: var(--blue);
+  --color-blue-muted: var(--blue-muted);
+  --font-heading: var(--font-heading);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --radius-card: 16px;
+  --radius-btn: 10px;
+  --radius-pill: 9999px;
+}
+
+/* ─────────────────────────────────────────────
+   Base
+───────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  transition: background-color 200ms ease, color 200ms ease;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #15213B;
+}
+
+/* ─────────────────────────────────────────────
+   Container utility  (max 1200px, responsive padding)
+───────────────────────────────────────────── */
+.container-wide {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (min-width: 768px) {
+  .container-wide {
+    padding-inline: 40px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Scroll progress bar
+───────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--blue));
+  z-index: 9999;
+  transform-origin: left;
+  transition: width 50ms linear;
+}
+
+/* ─────────────────────────────────────────────
+   Typewriter cursor
+───────────────────────────────────────────── */
+.typewriter-cursor::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+  color: var(--accent);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────
+   Pulsing dot
+───────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  50%       { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────
+   Marquee
+───────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.marquee-wrap:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ─────────────────────────────────────────────
+   Count-up number
+───────────────────────────────────────────── */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────────
+   Section fade-up
+───────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fade-up 0.5s ease-out forwards;
+}
+
+/* ─────────────────────────────────────────────
+   Code window
+───────────────────────────────────────────── */
+.code-window {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+/* ─────────────────────────────────────────────
+   Spotlight card
+───────────────────────────────────────────── */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(245, 184, 61, 0.07) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ─────────────────────────────────────────────
+   Scrollbar hide
+───────────────────────────────────────────── */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────
+   Focus ring
+───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─────────────────────────────────────────────
+   Command palette backdrop
+───────────────────────────────────────────── */
+.palette-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 13, 24, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
+/* ─────────────────────────────────────────────
+   Cursor glow (desktop only)
+───────────────────────────────────────────── */
+#cursor-glow {
+  pointer-events: none;
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(245, 184, 61, 0.06) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  transition: left 0.15s ease-out, top 0.15s ease-out;
+  will-change: left, top;
+}
+
+/* ─────────────────────────────────────────────
+   Gradient text
+───────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #F5B83D 0%, #F97316 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─────────────────────────────────────────────
+   Eyebrow label
+───────────────────────────────────────────── */
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ─────────────────────────────────────────────
+   Hero background grid
+───────────────────────────────────────────── */
+.hero-grid {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+}
+
+/* ─────────────────────────────────────────────
+   Tab active indicator
+───────────────────────────────────────────── */
+.tab-active {
+  border-bottom: 2px solid var(--accent);
+  color: var(--ink);
+}
+
+/* ─────────────────────────────────────────────
+   Animated flow line
+───────────────────────────────────────────── */
+@keyframes flow {
+  from { stroke-dashoffset: 40; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.flow-line {
+  stroke-dasharray: 8 4;
+  animation: flow 1.2s linear infinite;
+}
+
+/* ─────────────────────────────────────────────
+   Reduced-motion override (must be last)
+───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .marquee-track {
+    animation: none;
+  }
+  .typewriter-cursor::after {
+    animation: none;
+    content: "";
+  }
+}
