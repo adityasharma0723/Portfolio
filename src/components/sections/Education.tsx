@@ -9,7 +9,7 @@ export default function Education({ education }: { education: EducationEntry[] }
       </h2>
 
       {/* Vertical timeline */}
-      <ol className="relative flex flex-col gap-0">
+      <ol className="relative flex flex-col gap-4">
         {education.map((entry, i) => {
           const isLast = i === education.length - 1;
           return (
@@ -26,13 +26,12 @@ export default function Education({ education }: { education: EducationEntry[] }
                   <span
                     className="mt-1 flex-1 w-px bg-line"
                     aria-hidden="true"
-                    style={{ minHeight: "3rem" }}
                   />
                 )}
               </div>
 
               {/* Content card */}
-              <div className="pb-10 last:pb-0 flex-1">
+              <div className="flex-1">
                 <article className="rounded-[16px] border border-line bg-card p-5 hover:border-blue transition-colors duration-200">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 mb-2">
                     <h3 className="font-heading text-base font-bold text-ink leading-snug">
