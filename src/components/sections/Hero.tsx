@@ -257,7 +257,7 @@ function CodeWindow({ prefersReduced }: { prefersReduced: boolean | null }) {
 
 /* ── Stats strip ─────────────────────────────────────────── */
 const STATS = [
-  { number: 3, suffix: "", label: "Major projects" },
+  { number: 5, suffix: "+", label: "Major projects" },
   { number: 100, suffix: "+", label: "DSA problems solved" },
   { number: 3, suffix: "", label: "Industry certificates" },
   { number: 5, suffix: "", label: "Top rank, CodeStorm Hackathon" },
