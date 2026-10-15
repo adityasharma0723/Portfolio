@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Search, ArrowRight, Mail, Github, Linkedin, Sun, Moon, Copy, Check } from "lucide-react";
+import { Search, ArrowRight, Mail, Sun, Moon, Copy, Check } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import type { ContactInfo, Project } from "@/content/types";
 
