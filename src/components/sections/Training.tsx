@@ -2,7 +2,7 @@ import type { Training as TrainingType } from "@/content/types";
 
 export default function Training({ training }: { training: TrainingType }) {
   return (
-    <section id="training" aria-labelledby="training-heading" className="py-16 lg:py-24">
+    <section id="training" aria-labelledby="training-heading" className="py-10 lg:py-16">
       <p className="eyebrow mb-2">Development</p>
       <h2 id="training-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-8">
         Training

@@ -2,7 +2,7 @@ import type { EducationEntry } from "@/content/types";
 
 export default function Education({ education }: { education: EducationEntry[] }) {
   return (
-    <section id="education" aria-labelledby="education-heading" className="py-16 lg:py-24">
+    <section id="education" aria-labelledby="education-heading" className="py-10 lg:py-16">
       <p className="eyebrow mb-2">Academic background</p>
       <h2 id="education-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-10">
         Education

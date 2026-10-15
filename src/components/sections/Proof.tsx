@@ -45,7 +45,7 @@ export default function Proof({
   achievements: Achievement[];
 }) {
   return (
-    <section id="proof" aria-labelledby="proof-heading" className="py-16 lg:py-24">
+    <section id="proof" aria-labelledby="proof-heading" className="py-10 lg:py-16">
       <p className="eyebrow mb-2">Credentials & Recognition</p>
       <h2 id="proof-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-8">
         Credentials & Achievements

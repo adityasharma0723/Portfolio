@@ -55,7 +55,7 @@ export default function Contact({
   };
 
   return (
-    <section id="contact" aria-labelledby="contact-heading" className="py-16 lg:py-24">
+    <section id="contact" aria-labelledby="contact-heading" className="py-10 lg:py-16">
       <p className="eyebrow mb-2">Get in touch</p>
       <h2 id="contact-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-3">
         Contact

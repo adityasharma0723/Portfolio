@@ -281,7 +281,7 @@ export default function Work({ projects }: { projects: Project[] }) {
   }, [projects.length]);
 
   return (
-    <section id="work" aria-labelledby="work-heading" className="py-16 lg:py-24">
+    <section id="work" aria-labelledby="work-heading" className="py-10 lg:py-16">
       <p className="eyebrow mb-2">Selected work</p>
       <h2 id="work-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-10">
         Projects

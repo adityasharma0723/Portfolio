@@ -93,7 +93,7 @@ export default function Skills({
   const projectsUsingChip = activeChip ? SKILL_PROJECT_MAP[activeChip] : null;
 
   return (
-    <section id="skills" aria-labelledby="skills-heading" className="py-16 lg:py-24">
+    <section id="skills" aria-labelledby="skills-heading" className="py-10 lg:py-16">
       <p className="eyebrow mb-2">What I know</p>
       <h2 id="skills-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-3">
         Skills
