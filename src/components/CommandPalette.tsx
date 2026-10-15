@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Search, ArrowRight, Mail, Sun, Moon, Copy, Check } from "lucide-react";
+import { Search, Mail, Sun, Moon, Copy, Check, ArrowUpRight } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import type { ContactInfo, Project } from "@/content/types";
 
@@ -24,6 +24,8 @@ type PaletteAction = {
   icon: React.ReactNode;
   action: () => void;
   keywords?: string;
+  group: "navigate" | "project" | "action";
+  tag?: string;
 };
 
 export default function CommandPalette({
@@ -38,7 +40,6 @@ export default function CommandPalette({
   const [cursor, setCursor] = useState(0);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
   const { resolvedTheme, toggleTheme } = useTheme();
 
   const copyEmail = useCallback(async () => {
@@ -58,21 +59,22 @@ export default function CommandPalette({
   }, [contact.email]);
 
   const sections = [
-    { id: "work", label: "Work" },
-    { id: "skills", label: "Skills" },
-    { id: "training", label: "Training" },
-    { id: "proof", label: "Proof" },
-    { id: "education", label: "Education" },
-    { id: "contact", label: "Contact" },
+    { id: "work", label: "Work", emoji: "💼" },
+    { id: "skills", label: "Skills", emoji: "⚡" },
+    { id: "training", label: "Training", emoji: "🎓" },
+    { id: "proof", label: "Credentials", emoji: "🏆" },
+    { id: "education", label: "Education", emoji: "📚" },
+    { id: "contact", label: "Contact", emoji: "✉️" },
   ];
 
   const actions: PaletteAction[] = [
     ...sections.map((s) => ({
       id: `nav-${s.id}`,
-      label: `Go to ${s.label}`,
-      description: "Navigate",
+      label: s.label,
+      description: `Jump to ${s.label}`,
       keywords: s.id,
-      icon: <ArrowRight className="w-4 h-4" />,
+      icon: <span className="text-base leading-none">{s.emoji}</span>,
+      group: "navigate" as const,
       action: () => {
         document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth" });
         setOpen(false);
@@ -83,7 +85,9 @@ export default function CommandPalette({
       label: p.title,
       description: p.category,
       keywords: p.id,
-      icon: <ArrowRight className="w-4 h-4" />,
+      icon: <ArrowUpRight className="w-4 h-4" />,
+      group: "project" as const,
+      tag: p.category,
       action: () => {
         document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
         setOpen(false);
@@ -91,50 +95,43 @@ export default function CommandPalette({
     })),
     {
       id: "copy-email",
-      label: copied ? "Copied!" : "Copy email",
+      label: copied ? "Copied!" : "Copy Email",
       description: contact.email,
-      icon: copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />,
+      icon: copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />,
+      group: "action",
       action: copyEmail,
     },
     {
       id: "open-github",
-      label: "Open GitHub",
+      label: "GitHub",
       description: "github.com/adityasharma0723",
       icon: <GithubIcon />,
-      action: () => {
-        window.open(contact.github, "_blank", "noopener,noreferrer");
-        setOpen(false);
-      },
+      group: "action",
+      action: () => { window.open(contact.github, "_blank", "noopener,noreferrer"); setOpen(false); },
     },
     {
       id: "open-linkedin",
-      label: "Open LinkedIn",
+      label: "LinkedIn",
       description: "linkedin.com/in/aditya-sharma23",
       icon: <LinkedinIcon />,
-      action: () => {
-        window.open(contact.linkedin, "_blank", "noopener,noreferrer");
-        setOpen(false);
-      },
+      group: "action",
+      action: () => { window.open(contact.linkedin, "_blank", "noopener,noreferrer"); setOpen(false); },
     },
     {
       id: "toggle-theme",
-      label: `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`,
-      description: "Theme",
+      label: `${resolvedTheme === "dark" ? "Light" : "Dark"} Mode`,
+      description: "Toggle theme",
       icon: resolvedTheme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />,
-      action: () => {
-        toggleTheme();
-        setOpen(false);
-      },
+      group: "action",
+      action: () => { toggleTheme(); setOpen(false); },
     },
     {
       id: "email-me",
-      label: "Email me",
+      label: "Email Me",
       description: contact.email,
       icon: <Mail className="w-4 h-4" />,
-      action: () => {
-        window.location.href = `mailto:${contact.email}`;
-        setOpen(false);
-      },
+      group: "action",
+      action: () => { window.location.href = `mailto:${contact.email}`; setOpen(false); },
     },
   ];
 
@@ -148,80 +145,79 @@ export default function CommandPalette({
     );
   });
 
-  // Open via keyboard shortcut and custom event
+  const navItems = filtered.filter((a) => a.group === "navigate");
+  const projectItems = filtered.filter((a) => a.group === "project");
+  const actionItems = filtered.filter((a) => a.group === "action");
+  const flatFiltered = [...navItems, ...projectItems, ...actionItems];
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        setOpen((v) => !v);
-      }
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") { e.preventDefault(); setOpen((v) => !v); }
       if (e.key === "Escape") setOpen(false);
     };
     const handleEvent = () => setOpen(true);
-
     window.addEventListener("keydown", handleKey);
     window.addEventListener("open-palette", handleEvent);
-    return () => {
-      window.removeEventListener("keydown", handleKey);
-      window.removeEventListener("open-palette", handleEvent);
-    };
+    return () => { window.removeEventListener("keydown", handleKey); window.removeEventListener("open-palette", handleEvent); };
   }, []);
 
-  // Focus input when opened
   useEffect(() => {
-    if (open) {
-      setCursor(0);
-      setQuery("");
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    if (open) { setCursor(0); setQuery(""); setTimeout(() => inputRef.current?.focus(), 50); }
   }, [open]);
 
-  // Arrow key navigation
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setCursor((c) => Math.min(c + 1, filtered.length - 1));
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setCursor((c) => Math.max(c - 1, 0));
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        filtered[cursor]?.action();
-      }
+      if (e.key === "ArrowDown") { e.preventDefault(); setCursor((c) => Math.min(c + 1, flatFiltered.length - 1)); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); setCursor((c) => Math.max(c - 1, 0)); }
+      else if (e.key === "Enter") { e.preventDefault(); flatFiltered[cursor]?.action(); }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [open, cursor, filtered]);
-
-  // Scroll active item into view
-  useEffect(() => {
-    const item = listRef.current?.children[cursor] as HTMLElement;
-    item?.scrollIntoView({ block: "nearest" });
-  }, [cursor]);
+  }, [open, cursor, flatFiltered]);
 
   if (!open) return null;
 
+  const CardItem = ({ a, globalIndex }: { a: PaletteAction; globalIndex: number }) => (
+    <button
+      role="option"
+      aria-selected={globalIndex === cursor}
+      onClick={a.action}
+      onMouseEnter={() => setCursor(globalIndex)}
+      className={[
+        "flex flex-col items-start gap-1 rounded-xl border p-3 text-left w-full transition-all duration-150 cursor-pointer",
+        globalIndex === cursor
+          ? "border-accent/60 bg-accent/10 shadow-sm shadow-accent/10"
+          : "border-line bg-bg/50 hover:border-accent/30 hover:bg-accent/5",
+      ].join(" ")}
+    >
+      <div className="flex items-center gap-2 w-full">
+        <span className={`shrink-0 ${globalIndex === cursor ? "text-accent" : "text-muted"}`}>{a.icon}</span>
+        <p className="text-sm font-semibold text-ink truncate font-sans flex-1">{a.label}</p>
+        {a.tag && (
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full border border-line text-muted shrink-0">{a.tag}</span>
+        )}
+        {globalIndex === cursor && (
+          <kbd className="font-mono text-[10px] text-muted border border-line rounded px-1.5 py-0.5 shrink-0">↵</kbd>
+        )}
+      </div>
+      {a.description && (
+        <p className="text-[11px] text-muted truncate font-mono pl-6 w-full">{a.description}</p>
+      )}
+    </button>
+  );
+
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="palette-backdrop"
-        aria-hidden="true"
-        onClick={() => setOpen(false)}
-      />
-
-      {/* Dialog */}
+      <div className="palette-backdrop" aria-hidden="true" onClick={() => setOpen(false)} />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="fixed left-1/2 top-[20vh] z-[999] w-full max-w-[560px] -translate-x-1/2 rounded-[16px] border border-line bg-card shadow-2xl overflow-hidden"
-        style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.5)" }}
+        className="fixed left-1/2 top-[15vh] z-[999] w-full max-w-[600px] -translate-x-1/2 rounded-[20px] border border-line bg-card shadow-2xl overflow-hidden"
+        style={{ boxShadow: "0 32px 96px rgba(0,0,0,0.55)" }}
       >
-        {/* Search input */}
-        <div className="flex items-center gap-3 border-b border-line px-4 py-3">
+        <div className="flex items-center gap-3 border-b border-line px-4 py-3.5">
           <Search className="w-4 h-4 text-muted shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
@@ -230,60 +226,49 @@ export default function CommandPalette({
             aria-expanded="true"
             aria-autocomplete="list"
             aria-controls="palette-list"
-            aria-activedescendant={filtered[cursor] ? `palette-item-${filtered[cursor].id}` : undefined}
             placeholder="Search sections, projects, actions…"
             value={query}
             onChange={(e) => { setQuery(e.target.value); setCursor(0); }}
             className="flex-1 bg-transparent text-sm text-ink placeholder:text-muted outline-none font-sans"
           />
-          <kbd className="font-mono text-[10px] text-muted border border-line rounded px-1.5 py-0.5">
-            Esc
-          </kbd>
+          <kbd className="font-mono text-[10px] text-muted border border-line rounded px-1.5 py-0.5">Esc</kbd>
         </div>
 
-        {/* Results */}
-        <ul
-          ref={listRef}
+        <div
           id="palette-list"
           role="listbox"
           aria-label="Command palette results"
-          className="max-h-[360px] overflow-y-auto py-2"
+          className="max-h-[440px] overflow-y-auto p-3 flex flex-col gap-4"
         >
-          {filtered.length === 0 && (
-            <li className="px-4 py-6 text-center text-sm text-muted font-sans">
-              No results for &ldquo;{query}&rdquo;
-            </li>
+          {flatFiltered.length === 0 && (
+            <p className="py-8 text-center text-sm text-muted font-sans">No results for &ldquo;{query}&rdquo;</p>
           )}
-          {filtered.map((a, i) => (
-            <li
-              key={a.id}
-              id={`palette-item-${a.id}`}
-              role="option"
-              aria-selected={i === cursor}
-              className={[
-                "flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors duration-100",
-                i === cursor ? "bg-accent/10 text-ink" : "text-muted hover:bg-line/30 hover:text-ink",
-              ].join(" ")}
-              onMouseEnter={() => setCursor(i)}
-              onClick={a.action}
-            >
-              <span className="text-accent shrink-0">{a.icon}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-ink truncate font-sans">{a.label}</p>
-                {a.description && (
-                  <p className="text-xs text-muted truncate font-mono mt-0.5">{a.description}</p>
-                )}
+          {navItems.length > 0 && (
+            <div>
+              <p className="text-[10px] font-mono text-muted uppercase tracking-widest mb-2 px-0.5">Navigate</p>
+              <div className="grid grid-cols-3 gap-2">
+                {navItems.map((a) => <CardItem key={a.id} a={a} globalIndex={flatFiltered.indexOf(a)} />)}
               </div>
-              {i === cursor && (
-                <kbd className="font-mono text-[10px] text-muted border border-line rounded px-1.5 py-0.5 shrink-0">
-                  ↵
-                </kbd>
-              )}
-            </li>
-          ))}
-        </ul>
+            </div>
+          )}
+          {projectItems.length > 0 && (
+            <div>
+              <p className="text-[10px] font-mono text-muted uppercase tracking-widest mb-2 px-0.5">Projects</p>
+              <div className="grid grid-cols-2 gap-2">
+                {projectItems.map((a) => <CardItem key={a.id} a={a} globalIndex={flatFiltered.indexOf(a)} />)}
+              </div>
+            </div>
+          )}
+          {actionItems.length > 0 && (
+            <div>
+              <p className="text-[10px] font-mono text-muted uppercase tracking-widest mb-2 px-0.5">Actions</p>
+              <div className="grid grid-cols-2 gap-2">
+                {actionItems.map((a) => <CardItem key={a.id} a={a} globalIndex={flatFiltered.indexOf(a)} />)}
+              </div>
+            </div>
+          )}
+        </div>
 
-        {/* Footer hint */}
         <div className="border-t border-line px-4 py-2 flex gap-4 text-[10px] text-muted font-mono">
           <span><kbd className="font-mono">↑↓</kbd> navigate</span>
           <span><kbd className="font-mono">↵</kbd> select</span>
