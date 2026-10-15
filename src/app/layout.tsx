@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Aditya Sharma — Full-Stack Engineer & Data Science",
   description:
-    "Third-year B.Tech CSE student at LPU. I build full-stack products, data pipelines and AI tools, and I can defend every technical choice in them.",
+    "Final-year B.Tech CSE student at LPU. I build full-stack products, data pipelines and AI tools, and I can explain the reasoning behind every decision.",
   keywords: [
     "Aditya Sharma",
     "Full Stack Developer",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Aditya Sharma — Full-Stack Engineer & Data Science",
     description:
-      "Third-year B.Tech CSE student at LPU. I build full-stack products, data pipelines and AI tools.",
+      "Final-year B.Tech CSE student at LPU. I build full-stack products, data pipelines and AI tools.",
     type: "website",
   },
 };

@@ -10,7 +10,7 @@ const data: PortfolioData = {
   owner: "Aditya Sharma",
   tagline: "I build things I can explain line by line.",
   heroLede:
-    "Third-year B.Tech CSE student at LPU (Data Science minor). I build full-stack products, data pipelines and AI tools, and I can defend every technical choice in them.",
+    "Final-year B.Tech CSE student at LPU. I build full-stack products, data pipelines and AI tools, and I can explain the reasoning behind every decision.",
 
   // Set to false to hide the phone number everywhere on the site
   SHOW_PHONE: true,
