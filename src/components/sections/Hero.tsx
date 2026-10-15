@@ -368,7 +368,7 @@ export default function Hero({ data }: { data: HeroData }) {
       )}
 
       {/* Content */}
-      <div className="container-wide relative z-10 py-20 lg:py-28">
+      <div className="container-wide relative z-10 pt-10 pb-16 lg:pt-14 lg:pb-24">
         {/* Two-column grid */}
         <div className="grid lg:grid-cols-[3fr_2fr] gap-12 xl:gap-20 items-center">
           {/* Left column */}
