@@ -46,9 +46,9 @@ export default function Proof({
 }) {
   return (
     <section id="proof" aria-labelledby="proof-heading" className="py-16 lg:py-24">
-      <p className="eyebrow mb-2">Verified</p>
+      <p className="eyebrow mb-2">Credentials & Recognition</p>
       <h2 id="proof-heading" className="font-heading text-3xl sm:text-4xl font-bold text-ink mb-8">
-        Proof
+        Credentials & Achievements
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <CertCard certs={certificates} />
